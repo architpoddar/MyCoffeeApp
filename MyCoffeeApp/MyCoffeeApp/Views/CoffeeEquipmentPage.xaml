@@ -1,26 +1,53 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-             xmlns:viewmodels="clr-namespace:MyCoffeeApp.ViewModels"
+             xmlns:viewmodels="clr-namespace:MyCoffeeApp.ViewModels" 
+             xmlns:model="clr-namespace:MyCoffeeApp.Models"
              x:Class="MyCoffeeApp.Views.CoffeeEquipmentPage"
              BackgroundColor="White"
              x:DataType="viewmodels:CoffeeEquipmentViewModel">
     <ContentPage.BindingContext>
         <viewmodels:CoffeeEquipmentViewModel/>
     </ContentPage.BindingContext>
-    <ContentPage.Content>
-        <!--<StackLayout Orientation="Vertical">-->
-        <Grid RowDefinitions="*, Auto, Auto, *">
-
-            <Label 
-                x:Name="LabelCount" 
-                Padding="10"
-                Text="{Binding CountDisplay}"
-                HorizontalOptions="Center"
-                   Grid.Row="1"/>
-
-            <Button x:Name="ButtonClick" Grid.Row="2" Text="Button 2" Command="{Binding IncreaseCountCommand}" />
-        </Grid>
-        <!--</StackLayout>-->
-    </ContentPage.Content>
-</ContentPage> 
+    <ListView 
+        ItemSelected="ListView_ItemSelected"
+        ItemTapped="ListView_ItemTapped"
+              BackgroundColor="Transparent"
+              CachingStrategy="RecycleElement"
+              ItemsSource="{Binding CoffeeGroups}"
+              IsGroupingEnabled="True"
+              GroupDisplayBinding="{Binding Key}"
+              HasUnevenRows="True"
+              SeparatorColor="Transparent"
+              IsPullToRefreshEnabled="True"
+              IsRefreshing="{Binding IsBusy, Mode=OneWay}"
+              RefreshCommand="{Binding RefreshCommand}">
+        <ListView.ItemTemplate>
+            <DataTemplate x:DataType="model:Coffee">
+                <ViewCell>
+                    <ViewCell.ContextActions>
+                        <MenuItem Text="Favourite" Clicked="MenuItem_Clicked"/>
+                        <MenuItem Text="Delete" IsDestructive="True"/>
+                    </ViewCell.ContextActions>
+                    <Grid Padding="10" >
+                        <Frame CornerRadius="15"
+                               HasShadow="True">
+                            <StackLayout Orientation="Horizontal">
+                                <Image Source="{Binding Image}" WidthRequest="50" />
+                                <StackLayout VerticalOptions="Center" Margin="10, 0, 0, 0">
+                            <Label VerticalOptions="Center"
+                               FontSize="Large"
+                               Text="{Binding Name}" />
+                                <Label VerticalOptions="Center"
+                               FontSize="Medium"
+                               Text="{Binding Roaster}" />
+                            </StackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </Grid>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+        
+    </ListView>
+</ContentPage>  
